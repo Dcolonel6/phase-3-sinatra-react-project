@@ -1,3 +1,5 @@
 class Fine < ActiveRecord::Base
-    has_many :borrows
+    belongs_to :member
+    belongs_to :borrow
+
 end
