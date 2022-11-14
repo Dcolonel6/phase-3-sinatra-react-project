@@ -1,6 +1,6 @@
 # Phase 3 Project Guidelines
 ## Front End
-project Front end[https://github.com/Dcolonel6/phase-3-frontend-library-system]
+[project Front end}(https://github.com/Dcolonel6/phase-3-frontend-library-system)
 
 ## Learning Goals
 
