@@ -2,12 +2,22 @@ class ApplicationController < Sinatra::Base
   set :default_content_type, 'application/json'
  #books 
   get "/books" do
-    books = Book.all.map { |book_instance| book_instance.get_related_category }.to_json    
+    books = Book.all.to_json(
+      only: [:id, :title, :author, :description, :image, :available],
+      include: {
+        category: {only:[:name]}
+      }
+    )   
   end
 
   get '/books/:id' do
     book = Book.find(params[:id])
-    book.get_related_category.to_json
+    book.to_json(
+      only: [:id, :title, :author, :description, :image, :available],
+      include: {
+        category: {only:[:name]}
+      }
+    )
   end
   
   post '/books' do
@@ -115,13 +125,19 @@ class ApplicationController < Sinatra::Base
   
   #borrows
   get "/borrows" do
-    borrows = Borrow.all
-    borrows.to_json
+     Borrow.all.to_json(
+      except:[:member_id, :book_id],
+      include:{
+        book: {only: [:id, :title, :author]}, 
+        member: { only: [:id, :name, :username, :is_librarian]}         
+        
+      }
+     )
   end
 
   get '/borrows/:id' do
     borrow = Borrow.find(params[:id])
-    borrow.to_json
+    borrow.to_json(except:[:member_id, :book_id],include: [:member, :book])
   end
   
   post '/borrows' do
@@ -132,7 +148,10 @@ class ApplicationController < Sinatra::Base
       returned_on:params[:returned_on], 
       due_date:params[:due_date]
     )
-    borrow.to_json
+    borrow.to_json(include: {
+      member: {only: [:name, :username, :is_librarian]},
+      book: {only:[:title, :author, :description, :image, :available]}
+    })
   end
   
   patch '/borrows/:id' do
