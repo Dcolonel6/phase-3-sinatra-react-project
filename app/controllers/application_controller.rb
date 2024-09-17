@@ -115,8 +115,8 @@ class ApplicationController < Sinatra::Base
   
   #borrows
   get "/borrows" do
-    borrows = Borrow.all
-    borrows.to_json
+    borrows = Borrow.all.map { |borrow_instance|borrow_instance.get_related_books_members}.to_json
+    
   end
 
   get '/borrows/:id' do
